@@ -1,11 +1,8 @@
 import os
 import cv2
 import time
-# import numpy as np
-
 from IoU import iou_yolo
 
-############ XINGYOU AREA ############     
 EPITON_LIST = [ 'person', 'bicycle','car','Motorcycle','green3_h', 'bus', 'red3_h','truck','yellow3_h','green4_h', ' red4_h',' yellow4_h',' redgreen4_h','redyellow4_h',' greenarrow4_h', 'red_v','yellow_v','green_v']
 FOLDER_NAME = time.strftime("%Y_%m_%d_%H_%M", time.localtime()) 
 IMAGE_EXT = [".jpg", ".jpeg", ".webp", ".bmp", ".png"]
@@ -35,8 +32,7 @@ def get_txt_list(path):
 
 def make_dir(dir):
     if(not os.path.exists(dir)):
-        os.makedirs(dir)
-############ XINGYOU AREA ############     
+        os.makedirs(dir)   
 
 def get_info_bbox(bbox):
     label_name = bbox[0]
@@ -44,8 +40,7 @@ def get_info_bbox(bbox):
     y_mid = bbox[2]
     w = bbox[3]
     h = bbox[4]
-
-
+    
     return label_name, x_mid, y_mid, w, h 
 
 def get_tl_label(txt):
@@ -64,25 +59,18 @@ def get_tl_label(txt):
                 #print(x_mid, y_mid, w, h)
                 bbox_list.append([label_name, x_mid, y_mid, w, h])
                 #print(x_min, y_min, x_max, y_max)
+                
     return bbox_list
 
-### 나중에 다른코드에서 이함수만 불러서 쓸 예정
+
 def tl_label_crop(image,txt):
     print(image)
     bbox_list = get_tl_label(txt)#len sum of lines
 
     img = cv2.imread(image)
     height, width, _ = img.shape
-
-    ###
-    #IOU calcation to filter overlab case
-    ###consider the box overlab with different labels
-
-    # 이미지 파일 로드
-    ### [[n0,n1,n2,n3,n4],[],[]]170
     crop_img_list = []
-    
-##[[label_name, x_min, x_max, y_min, y_max],[label_name, x_min, x_max, y_min, y_max]]
+   
     for ii in range(len(bbox_list)):
         iou_source, box = iou_yolo(bbox_list[ii-1][1:],bbox_list[ii][1:],width,height)
         print(iou_source)
@@ -92,6 +80,7 @@ def tl_label_crop(image,txt):
         x_min, y_min, x_max, y_max = box
 
         crop_img_list.append([label_name, img[y_min:y_max, x_min:x_max]])
+        
     return crop_img_list
 
 def main(img_list,txt_list):
