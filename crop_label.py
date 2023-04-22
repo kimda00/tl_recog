@@ -48,7 +48,7 @@ def get_info_bbox(bbox):
 
     return label_name, x_mid, y_mid, w, h 
 
-def get_croped_label(txt):
+def get_tl_label(txt):
     bbox_list = []
     with open(txt, 'r') as f:
         label_lines = f.readlines()
@@ -67,12 +67,12 @@ def get_croped_label(txt):
     return bbox_list
 
 ### 나중에 다른코드에서 이함수만 불러서 쓸 예정
-def img_label_crop(image,txt):
+def tl_label_crop(image,txt):
     print(image)
-    bbox_list = get_croped_label(txt)#len sum of lines
+    bbox_list = get_tl_label(txt)#len sum of lines
 
     img = cv2.imread(image)
-    height, weight, _ = img.shape
+    height, width, _ = img.shape
 
     ###
     #IOU calcation to filter overlab case
@@ -84,7 +84,7 @@ def img_label_crop(image,txt):
     
 ##[[label_name, x_min, x_max, y_min, y_max],[label_name, x_min, x_max, y_min, y_max]]
     for ii in range(len(bbox_list)):
-        iou_source, box = iou_yolo(bbox_list[ii-1][1:],bbox_list[ii][1:],weight,height)
+        iou_source, box = iou_yolo(bbox_list[ii-1][1:],bbox_list[ii][1:],width,height)
         print(iou_source)
         if iou_source > 0.5:
             continue
@@ -95,7 +95,7 @@ def img_label_crop(image,txt):
     return crop_img_list
 
 def main(img_list,txt_list):
-    output_path = './123456'
+    output_path = './result'
     make_dir(output_path)
     for id, image in enumerate(img_list):
         fname = image.split('/')[-1].split('.')[0]
@@ -103,7 +103,7 @@ def main(img_list,txt_list):
         make_dir(save_dir)
         txt = txt_list[id]
 
-        crop_img_list = img_label_crop(image,txt)
+        crop_img_list = tl_label_crop(image,txt)
         count = 0
         for crop_img in crop_img_list:
             cv2.imwrite(save_dir + '/' + EPITON_LIST[int(crop_img[0])] + f'_{count}.jpg', crop_img[1]) 
