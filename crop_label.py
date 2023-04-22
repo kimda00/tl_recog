@@ -1,3 +1,8 @@
+#######
+bounding box가 존재하는 이미지 안에서 신호등 class 만 crop해서 ./result 폴더에 저장하는 코드
+#######
+
+
 import os
 import cv2
 import time
