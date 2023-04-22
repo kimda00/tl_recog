@@ -5,10 +5,9 @@ import matplotlib.pyplot as plt
 import os
 
 # 이미지 불러오기
-#img = cv2.imread('./croped_tll')
+img = cv2.imread('./croped_tll')
 
 # 이미지 전처리
-
 img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 img_blur = cv2.GaussianBlur(img_hsv, (7, 7), 0)
 
