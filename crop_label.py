@@ -104,5 +104,4 @@ if __name__ == '__main__':
     txt_path = './labels/'
     img_list = get_image_list(img_path)
     txt_list = get_txt_list(txt_path)
-
     main(img_list, txt_list)
